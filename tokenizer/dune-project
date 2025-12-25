@@ -1,3 +1,6 @@
 (lang dune 3.0)
 
 (name pumpkin_tokenizer)
+
+(formatting
+ (enabled_for ocaml))
