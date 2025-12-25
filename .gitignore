@@ -1,0 +1,41 @@
+# Data (runtime, not committed)
+data/
+
+# OCaml (tokenizer, parser)
+_build/
+*.byte
+*.native
+*.install
+.merlin
+
+# Haskell (optimizer)
+dist-newstyle/
+*.hi
+*.o
+*.cabal.sandbox/
+.cabal-sandbox/
+
+# Go (indexer)
+/indexer/bin/
+
+# Rust (compression, fuzzy)
+target/
+Cargo.lock
+
+# Elixir (crawler)
+_build/
+deps/
+*.ez
+*.beam
+erl_crash.dump
+
+# Lua (ranking) - typically no build artifacts
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*~
+
+# OS
+.DS_Store
