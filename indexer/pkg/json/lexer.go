@@ -33,6 +33,53 @@ func NewLexer(input string) *Lexer {
 	return &Lexer{input: input, pos: 0}
 }
 
+// Next returns the next token from the input.
+// It skips whitespace and advances the position.
+// Returns TokenEOF when input is exhausted.
+func (l *Lexer) Next() Token {
+	// Skip any whitespace before the next token
+	l.skipWhitespace()
+
+	// Check for end of input
+	if l.pos >= len(l.input) {
+		return Token{Type: TokenEOF}
+	}
+
+	ch := l.input[l.pos]
+
+	// Match single-character tokens
+	switch ch {
+	case '[':
+		l.pos++
+		return Token{Type: TokenLBracket}
+	case ']':
+		l.pos++
+		return Token{Type: TokenRBracket}
+	case '{':
+		l.pos++
+		return Token{Type: TokenLBrace}
+	case '}':
+		l.pos++
+		return Token{Type: TokenRBrace}
+	case ':':
+		l.pos++
+		return Token{Type: TokenColon}
+	case ',':
+		l.pos++
+		return Token{Type: TokenComma}
+	case '"':
+		// String literals start with a double quote
+		return l.readString()
+	default:
+		// Numbers start with a digit
+		if isDigit(ch) {
+			return l.readNumber()
+		}
+		// Unknown character - return error token
+		return Token{Type: TokenError, Value: string(ch)}
+	}
+}
+
 // skipWhitespace advances past any whitespace characters.
 // Handles space, tab, newline, and carriage return.
 func (l *Lexer) skipWhitespace() {
