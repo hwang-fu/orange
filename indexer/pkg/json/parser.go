@@ -14,6 +14,14 @@ type Parser struct {
 	curr  Token  // current token being examined
 }
 
+// NewParser creates a new Parser for the given input string.
+// It initializes the lexer and reads the first token.
+func NewParser(input string) *Parser {
+	p := &Parser{lexer: NewLexer(input)}
+	p.advance() // load the first token
+	return p
+}
+
 // advance moves to the next token from the lexer.
 func (p *Parser) advance() {
 	p.curr = p.lexer.Next()
