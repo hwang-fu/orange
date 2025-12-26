@@ -1,5 +1,8 @@
 package index
 
+// inverted.go - In-memory inverted index for document search.
+// Maps terms to posting lists (documents containing that term).
+
 // TokenWithPos is a simple struct for term + position pairs.
 // Used as input to AddDocument.
 type TokenWithPos struct {
