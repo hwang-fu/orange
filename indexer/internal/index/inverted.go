@@ -36,6 +36,39 @@ func New() *InvertedIndex {
 	}
 }
 
+// AddDocument indexes a single document's tokens.
+// docID is the unique identifier, tokens are (term, position) pairs.
+func (idx *InvertedIndex) AddDocument(docID string, tokens []TokenWithPos) {
+	// Group positions by term for this document
+	termPositions := make(map[string][]int)
+	for _, t := range tokens {
+		termPositions[t.Token] = append(termPositions[t.Token], t.Pos)
+	}
+
+	// Add each term to the index
+	for term, positions := range termPositions {
+		// Get or create posting list for this term
+		pl, exists := idx.terms[term]
+		if !exists {
+			pl = &PostingList{
+				DocFreq:  0,
+				Postings: make([]*Posting, 0),
+			}
+			idx.terms[term] = pl
+		}
+
+		// Add posting for this document
+		posting := &Posting{
+			DocID:     docID,
+			Positions: positions,
+		}
+		pl.Postings = append(pl.Postings, posting)
+		pl.DocFreq++
+	}
+
+	idx.docCount++
+}
+
 // Search returns all document IDs containing the given term.
 // Returns empty slice if term not found.
 func (idx *InvertedIndex) Search(term string) []string {
