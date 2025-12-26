@@ -14,6 +14,7 @@ type TokenWithPos struct {
 // Contains the document ID and all positions where the term appears.
 type Posting struct {
 	DocID     string // unique document identifier
+	TermFreq  int    // number of times term appears in this document
 	Positions []int  // term positions within the document (for phrase queries later)
 }
 
@@ -63,6 +64,7 @@ func (idx *InvertedIndex) AddDocument(docID string, tokens []TokenWithPos) {
 		// Add posting for this document
 		posting := &Posting{
 			DocID:     docID,
+			TermFreq:  len(positions),
 			Positions: positions,
 		}
 		pl.Postings = append(pl.Postings, posting)

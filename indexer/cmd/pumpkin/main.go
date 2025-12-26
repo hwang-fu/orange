@@ -92,11 +92,14 @@ func runIndex() {
 	}
 
 	for _, term := range os.Args[2:] {
-		results := idx.Search(term)
+		results := idx.SearchWithScore(term)
 		if len(results) == 0 {
 			fmt.Printf("'%s': no results\n", term)
 		} else {
-			fmt.Printf("'%s': %v\n", term, results)
+			fmt.Printf("'%s':\n", term)
+			for _, r := range results {
+				fmt.Printf("  %s (score: %.4f)\n", r.DocID, r.Score)
+			}
 		}
 	}
 }
