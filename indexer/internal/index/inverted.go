@@ -1,5 +1,12 @@
 package index
 
+// TokenWithPos is a simple struct for term + position pairs.
+// Used as input to AddDocument.
+type TokenWithPos struct {
+	Token string
+	Pos   int
+}
+
 // Posting represents a single occurrence of a term in a document.
 // Contains the document ID and all positions where the term appears.
 type Posting struct {
