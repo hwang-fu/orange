@@ -33,6 +33,8 @@ func NewLexer(input string) *Lexer {
 	return &Lexer{input: input, pos: 0}
 }
 
+// skipWhitespace advances past any whitespace characters.
+// Handles space, tab, newline, and carriage return.
 func (l *Lexer) skipWhitespace() {
 	for l.pos < len(l.input) {
 		ch := l.input[l.pos]
@@ -60,6 +62,19 @@ func (l *Lexer) readString() Token {
 	l.pos++ // skip closing "
 
 	return Token{Type: TokenString, Value: value}
+}
+
+// readNumber reads an integer literal (non-negative).
+// Returns a TokenNumber with the digit sequence as a string.
+func (l *Lexer) readNumber() Token {
+	start := l.pos
+
+	// Read consecutive digits
+	for l.pos < len(l.input) && isDigit(l.input[l.pos]) {
+		l.pos++
+	}
+
+	return Token{Type: TokenNumber, Value: l.input[start:l.pos]}
 }
 
 // isDigit checks if a byte is an ASCII digit (0-9).
