@@ -1,5 +1,10 @@
 package index
 
+import (
+	"math"
+	"sort"
+)
+
 // SearchResult represents a document with its relevance score.
 type SearchResult struct {
 	DocID string  // document identifier
