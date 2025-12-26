@@ -11,3 +11,8 @@ type Parser struct {
 	lexer *Lexer // the lexer providing tokens
 	curr  Token  // current token being examined
 }
+
+// advance moves to the next token from the lexer.
+func (p *Parser) advance() {
+	p.curr = p.lexer.Next()
+}
