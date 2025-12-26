@@ -24,3 +24,7 @@ type Lexer struct {
 	input string
 	pos   int
 }
+
+func NewLexer(input string) *Lexer {
+	return &Lexer{input: input, pos: 0}
+}
