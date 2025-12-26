@@ -1,6 +1,9 @@
 package json
 
-import "errors"
+import (
+	"errors"
+	"strconv"
+)
 
 // TokenEntry represents a single token from the OCaml tokenizer.
 // Matches the JSON format: {"token": "word", "pos": 0}
@@ -36,4 +39,68 @@ func (p *Parser) expect(t TokenType) error {
 	}
 	p.advance()
 	return nil
+}
+
+// parseOneEntry parses a single {"token": "...", "pos": N} object.
+// Returns a TokenEntry with the extracted values.
+func (p *Parser) parseOneEntry() (TokenEntry, error) {
+	var entry TokenEntry
+
+	// Expect opening brace
+	if err := p.expect(TokenLBrace); err != nil {
+		return entry, errors.New("expected '{' for entry")
+	}
+
+	// Parse two key-value pairs (order may vary)
+	for i := 0; i < 2; i++ {
+		if i > 0 {
+			// Expect comma between pairs
+			if err := p.expect(TokenComma); err != nil {
+				return entry, errors.New("expected ',' between fields")
+			}
+		}
+
+		// Get the key
+		if p.curr.Type != TokenString {
+			return entry, errors.New("expected string key")
+		}
+		key := p.curr.Value
+		p.advance()
+
+		// Expect colon
+		if err := p.expect(TokenColon); err != nil {
+			return entry, errors.New("expected ':' after key")
+		}
+
+		// Get the value based on key
+		switch key {
+		case "token":
+			if p.curr.Type != TokenString {
+				return entry, errors.New("expected string for 'token'")
+			}
+			entry.Token = p.curr.Value
+			p.advance()
+
+		case "pos":
+			if p.curr.Type != TokenNumber {
+				return entry, errors.New("expected number for 'pos'")
+			}
+			pos, err := strconv.Atoi(p.curr.Value)
+			if err != nil {
+				return entry, errors.New("invalid position number")
+			}
+			entry.Pos = pos
+			p.advance()
+
+		default:
+			return entry, errors.New("unknown key: " + key)
+		}
+	}
+
+	// Expect closing brace
+	if err := p.expect(TokenRBrace); err != nil {
+		return entry, errors.New("expected '}' after entry")
+	}
+
+	return entry, nil
 }
