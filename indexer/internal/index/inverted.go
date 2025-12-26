@@ -13,3 +13,10 @@ type PostingList struct {
 	DocFreq  int        // number of documents containing this term
 	Postings []*Posting // list of postings, one per document
 }
+
+// InvertedIndex is the core search data structure.
+// Maps each term to its posting list.
+type InvertedIndex struct {
+	terms    map[string]*PostingList // term -> posting list
+	docCount int                     // total number of indexed documents
+}
