@@ -14,3 +14,8 @@ const (
 	TokenEOF
 	TokenError
 )
+
+type Token struct {
+	Type  TokenType
+	Value string // for strings and numbers, the actual value
+}
