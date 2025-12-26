@@ -39,3 +39,8 @@ func (l *Lexer) skipWhitespace() {
 		}
 	}
 }
+
+// isDigit checks if a byte is an ASCII digit (0-9).
+func isDigit(ch byte) bool {
+	return ch >= '0' && ch <= '9'
+}
