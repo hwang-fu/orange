@@ -6,3 +6,8 @@ type TokenEntry struct {
 	Token string // the normalized token text
 	Pos   int    // position in the original document
 }
+
+type Parser struct {
+	lexer *Lexer // the lexer providing tokens
+	curr  Token  // current token being examined
+}
