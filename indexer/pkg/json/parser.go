@@ -1,5 +1,8 @@
 package json
 
+// parser.go - Recursive descent parser for tokenizer JSON output.
+// Parses: [{"token": "...", "pos": N}, ...]
+
 import (
 	"errors"
 	"strconv"
@@ -12,6 +15,8 @@ type TokenEntry struct {
 	Pos   int    // position in the original document
 }
 
+// Parser performs syntactic analysis on JSON tokens.
+// It consumes tokens from a Lexer and builds Go data structures.
 type Parser struct {
 	lexer *Lexer // the lexer providing tokens
 	curr  Token  // current token being examined
