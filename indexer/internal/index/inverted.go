@@ -20,3 +20,11 @@ type InvertedIndex struct {
 	terms    map[string]*PostingList // term -> posting list
 	docCount int                     // total number of indexed documents
 }
+
+// New creates a new empty InvertedIndex.
+func New() *InvertedIndex {
+	return &InvertedIndex{
+		terms:    make(map[string]*PostingList),
+		docCount: 0,
+	}
+}
