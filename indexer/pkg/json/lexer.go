@@ -19,16 +19,21 @@ const (
 	TokenError
 )
 
+// Token represents a single lexical token with its type and value.
+// Value is populated for TokenString and TokenNumber.
 type Token struct {
 	Type  TokenType
 	Value string // for strings and numbers, the actual value
 }
 
+// Lexer performs lexical analysis on a JSON string.
+// It maintains the current position and provides tokens one at a time.
 type Lexer struct {
-	input string
-	pos   int
+	input string // the full JSON input
+	pos   int    // current position in input
 }
 
+// NewLexer creates a new Lexer for the given input string.
 func NewLexer(input string) *Lexer {
 	return &Lexer{input: input, pos: 0}
 }
@@ -95,6 +100,7 @@ func (l *Lexer) skipWhitespace() {
 
 // readString reads a string literal (without escape sequence handling).
 // Assumes the opening quote has NOT been consumed yet.
+// It doesn't handle escape sequences like \" or \\ yet.
 // Returns a TokenString with the content between quotes.
 func (l *Lexer) readString() Token {
 	l.pos++ // skip opening "
@@ -112,6 +118,7 @@ func (l *Lexer) readString() Token {
 }
 
 // readNumber reads an integer literal (non-negative).
+// It only handles positive integers yet.
 // Returns a TokenNumber with the digit sequence as a string.
 func (l *Lexer) readNumber() Token {
 	start := l.pos
