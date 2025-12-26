@@ -1,5 +1,8 @@
 package main
 
+// main.go - CLI entry point for the pumpkin indexer.
+// Supports two modes: index (build from stdin) and query (search).
+
 import (
 	"bufio"
 	"fmt"
@@ -18,11 +21,12 @@ func main() {
 
 	switch os.Args[1] {
 	case "index":
-		fmt.Println("index mode (not implemented)")
+		runIndex()
 	case "query":
-		fmt.Println("query mode (not implemented)")
+		runQuery()
 	default:
 		fmt.Fprintf(os.Stderr, "unknown command: %s\n", os.Args[1])
+		printUsage()
 		os.Exit(1)
 	}
 }
@@ -34,24 +38,19 @@ func runQuery() {
 }
 
 // runIndex reads tokenizer output from stdin and builds an inverted index.
-// Then enters interactive query mode.
+// If query terms are provided as arguments, searches for them.
 func runIndex() {
 	// Create a new index
 	idx := index.New()
 
 	// Read JSON lines from stdin
-	// Each line is a document: [{"token": "...", "pos": N}, ...]
 	scanner := bufio.NewScanner(os.Stdin)
 	docNum := 0
-
-	fmt.Fprintln(os.Stderr, "Reading documents from stdin (one JSON array per line)...")
-	fmt.Fprintln(os.Stderr, "Press Ctrl+D when done.")
-	fmt.Fprintln(os.Stderr, "")
 
 	for scanner.Scan() {
 		line := scanner.Text()
 		if strings.TrimSpace(line) == "" {
-			continue // skip empty lines
+			continue
 		}
 
 		// Parse the JSON
@@ -82,24 +81,18 @@ func runIndex() {
 		os.Exit(1)
 	}
 
-	// Print index stats
-	fmt.Fprintln(os.Stderr, "")
+	// Print index stats to stderr
 	fmt.Fprintf(os.Stderr, "Indexed %d documents, %d unique terms\n", idx.DocCount(), idx.TermCount())
-	fmt.Fprintln(os.Stderr, "")
 
-	// Enter interactive query mode
-	fmt.Fprintln(os.Stderr, "Enter search terms (one per line, Ctrl+D to exit):")
-	queryScanner := bufio.NewScanner(os.Stdin)
+	// Query terms from command line arguments
+	// Usage: pumpkin index <term1> <term2> ...
+	if len(os.Args) < 3 {
+		fmt.Fprintln(os.Stderr, "usage: pumpkin index <query-term> [<query-term>...]")
+		return
+	}
 
-	for queryScanner.Scan() {
-		term := strings.TrimSpace(queryScanner.Text())
-		if term == "" {
-			continue
-		}
-
-		// Search the index
+	for _, term := range os.Args[2:] {
 		results := idx.Search(term)
-
 		if len(results) == 0 {
 			fmt.Printf("'%s': no results\n", term)
 		} else {
@@ -110,9 +103,9 @@ func runIndex() {
 
 // printUsage displays help information.
 func printUsage() {
-	fmt.Fprintln(os.Stderr, "usage: pumpkin <command>")
+	fmt.Fprintln(os.Stderr, "usage: pumpkin <command> [args]")
 	fmt.Fprintln(os.Stderr, "")
 	fmt.Fprintln(os.Stderr, "commands:")
-	fmt.Fprintln(os.Stderr, "  index    read token JSON from stdin, build index, then query interactively")
-	fmt.Fprintln(os.Stderr, "  query    (reserved for future use)")
+	fmt.Fprintln(os.Stderr, "  index <term>...   read tokens from stdin, build index, query for terms")
+	fmt.Fprintln(os.Stderr, "  query             (reserved for future use)")
 }
