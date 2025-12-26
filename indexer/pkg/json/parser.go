@@ -25,6 +25,49 @@ func NewParser(input string) *Parser {
 	return p
 }
 
+// ParseTokenEntries parses the full tokenizer output.
+// Expects format: [{"token": "...", "pos": N}, ...]
+// Returns a slice of TokenEntry structs.
+func (p *Parser) ParseTokenEntries() ([]TokenEntry, error) {
+	var entries []TokenEntry
+
+	// Expect opening bracket
+	if err := p.expect(TokenLBracket); err != nil {
+		return nil, errors.New("expected '[' at start")
+	}
+
+	// Handle empty array
+	if p.curr.Type == TokenRBracket {
+		p.advance()
+		return entries, nil
+	}
+
+	// Parse first entry
+	entry, err := p.parseOneEntry()
+	if err != nil {
+		return nil, err
+	}
+	entries = append(entries, entry)
+
+	// Parse remaining entries (comma-separated)
+	for p.curr.Type == TokenComma {
+		p.advance() // consume comma
+
+		entry, err := p.parseOneEntry()
+		if err != nil {
+			return nil, err
+		}
+		entries = append(entries, entry)
+	}
+
+	// Expect closing bracket
+	if err := p.expect(TokenRBracket); err != nil {
+		return nil, errors.New("expected ']' at end")
+	}
+
+	return entries, nil
+}
+
 // advance moves to the next token from the lexer.
 func (p *Parser) advance() {
 	p.curr = p.lexer.Next()
