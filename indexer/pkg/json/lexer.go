@@ -19,3 +19,8 @@ type Token struct {
 	Type  TokenType
 	Value string // for strings and numbers, the actual value
 }
+
+type Lexer struct {
+	input string
+	pos   int
+}
