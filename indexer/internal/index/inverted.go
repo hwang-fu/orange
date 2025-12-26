@@ -64,6 +64,7 @@ func (idx *InvertedIndex) AddDocument(docID string, tokens []TokenWithPos) {
 		// Add posting for this document
 		posting := &Posting{
 			DocID:     docID,
+			TermFreq:  len(positions),
 			Positions: positions,
 		}
 		pl.Postings = append(pl.Postings, posting)
