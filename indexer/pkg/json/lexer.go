@@ -28,3 +28,14 @@ type Lexer struct {
 func NewLexer(input string) *Lexer {
 	return &Lexer{input: input, pos: 0}
 }
+
+func (l *Lexer) skipWhitespace() {
+	for l.pos < len(l.input) {
+		ch := l.input[l.pos]
+		if ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r' {
+			l.pos++
+		} else {
+			break
+		}
+	}
+}
