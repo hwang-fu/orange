@@ -36,6 +36,22 @@ func New() *InvertedIndex {
 	}
 }
 
+// Search returns all document IDs containing the given term.
+// Returns empty slice if term not found.
+func (idx *InvertedIndex) Search(term string) []string {
+	pl, exists := idx.terms[term]
+	if !exists {
+		return []string{}
+	}
+
+	// Extract document IDs from postings
+	docIDs := make([]string, len(pl.Postings))
+	for i, p := range pl.Postings {
+		docIDs[i] = p.DocID
+	}
+	return docIDs
+}
+
 // DocCount returns the total number of indexed documents.
 func (idx *InvertedIndex) DocCount() int {
 	return idx.docCount
