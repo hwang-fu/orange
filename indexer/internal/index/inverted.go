@@ -36,6 +36,11 @@ func New() *InvertedIndex {
 	}
 }
 
+// DocCount returns the total number of indexed documents.
+func (idx *InvertedIndex) DocCount() int {
+	return idx.docCount
+}
+
 // TermCount returns the number of unique terms in the index.
 func (idx *InvertedIndex) TermCount() int {
 	return len(idx.terms)
