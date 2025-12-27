@@ -40,3 +40,7 @@ let words =
   ; "how"
   ]
 ;;
+
+(* Check if a word is a stopword.
+     Returns true if the word should be filtered out. *)
+let is_stopword word = List.mem word words
