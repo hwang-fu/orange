@@ -1,3 +1,5 @@
+(* parser.ml - Recursive descent parser for query DSL *)
+
 type t =
   { lexer : Lexer.t
   ; mutable current : Token.t
@@ -42,9 +44,6 @@ let parse_phrase parser =
   let words = collect_words [] in
   Ast.Phrase words
 ;;
-
-(* Forward declaration for mutual recursion *)
-let parse_expr parser = failwith "not implemented"
 
 (* Parse a factor: WORD | PHRASE | '(' expr ')' *)
 let rec parse_factor parser =
