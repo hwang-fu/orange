@@ -21,6 +21,8 @@ let tokenize text =
   |> List.mapi (fun i word -> String.lowercase_ascii word, i)
 ;;
 
+(* Filter out stopwords from a list of (token, position) pairs.
+   Positions are preserved from the original text. *)
 let remove_stopwords tokens =
-  List.filter (fun (word, _pos) -> not (Stopwords.is_stopword word)) tokens
+  List.filter (fun (word, _) -> not (Stopwords.is_stopword word)) tokens
 ;;

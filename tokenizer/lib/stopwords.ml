@@ -1,5 +1,7 @@
+(* stopwords.ml - Common English stopwords for filtering *)
+
 (* A set of common English stopwords to be filtered from token streams.
-  These words appear frequently but carry little semantic value for search. *)
+   These words appear frequently but carry little semantic value for search. *)
 let words =
   [ "a"
   ; "an"
@@ -42,5 +44,5 @@ let words =
 ;;
 
 (* Check if a word is a stopword.
-     Returns true if the word should be filtered out. *)
+   Returns true if the word should be filtered out. *)
 let is_stopword word = List.mem word words
