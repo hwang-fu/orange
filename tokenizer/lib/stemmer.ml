@@ -45,7 +45,7 @@ let ends_double_consonant word =
 ;;
 
 (* Check if word ends with CVC pattern where final C is not w, x, or y.
-     Used to determine if we should add 'e' after removing suffix. *)
+   Used to determine if we should add 'e' after removing suffix. *)
 let ends_cvc word =
   let len = String.length word in
   if len < 3
@@ -84,4 +84,17 @@ let measure word =
     in
     let start = skip_initial_c 0 in
     loop start false 0)
+;;
+
+(* Step 1a: Remove plural suffixes *)
+let step1a word =
+  if ends_with word "sses"
+  then chop word 2 (* sses -> ss *)
+  else if ends_with word "ies"
+  then chop word 2 (* ies -> i *)
+  else if ends_with word "ss"
+  then word (* ss -> ss (no change) *)
+  else if ends_with word "s"
+  then chop word 1 (* s -> (remove) *)
+  else word
 ;;
