@@ -1,3 +1,5 @@
+(* lexer.ml - Tokenizer for query DSL *)
+
 type t =
   { input : string
   ; mutable pos : int
@@ -48,7 +50,7 @@ let read_word lexer =
 ;;
 
 (* Get next token *)
-let next_token lexer =
+let rec next_token lexer =
   skip_whitespace lexer;
   if is_at_end lexer
   then Token.EOF
@@ -71,7 +73,7 @@ let next_token lexer =
        | "OR" -> Token.OR
        | "NOT" -> Token.NOT
        | _ -> Token.WORD (String.lowercase_ascii word))
-    | Some c ->
+    | Some _ ->
       (* Skip unknown character *)
       ignore (advance lexer);
       next_token lexer
