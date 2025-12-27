@@ -97,4 +97,20 @@ let step1a word =
   else if ends_with word "s"
   then chop word 1 (* s -> (remove) *)
   else word
+
+(* Fix stem after removing -ed/-ing: handle double consonant and add 'e' if needed *)
+and step1b_fix stem =
+  if ends_with stem "at"
+  then stem ^ "e" (* at -> ate *)
+  else if ends_with stem "bl"
+  then stem ^ "e" (* bl -> ble *)
+  else if ends_with stem "iz"
+  then stem ^ "e" (* iz -> ize *)
+  else if ends_double_consonant stem
+  then (
+    let c = stem.[String.length stem - 1] in
+    if c <> 'l' && c <> 's' && c <> 'z' then chop stem 1 else stem)
+  else if measure stem = 1 && ends_cvc stem
+  then stem ^ "e"
+  else stem
 ;;
