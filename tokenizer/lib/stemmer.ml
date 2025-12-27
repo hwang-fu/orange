@@ -10,3 +10,29 @@ let is_vowel word i =
 
 (* Check if a character is a consonant *)
 let is_consonant word i = not (is_vowel word i)
+
+(* Calculate the measure (m) of a word.
+     Measure = number of VC (vowel-consonant) sequences. *)
+let measure word =
+  let len = String.length word in
+  if len = 0
+  then 0
+  else (
+    let rec loop i in_vowel count =
+      if i >= len
+      then count
+      else (
+        let v = is_vowel word i in
+        if in_vowel && not v
+        then
+          (* transition from vowel to consonant = +1 *)
+          loop (i + 1) false (count + 1)
+        else loop (i + 1) v count)
+    in
+    (* skip initial consonants *)
+    let rec skip_initial_c i =
+      if i >= len then i else if is_vowel word i then i else skip_initial_c (i + 1)
+    in
+    let start = skip_initial_c 0 in
+    loop start false 0)
+;;
