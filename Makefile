@@ -11,11 +11,11 @@
 # Build all subprojects
 all: build
 
-build: build-tokenizer build-indexer
+build: build-tokenizer build-indexer build-parser
 
-clean: clean-tokenizer clean-indexer
+clean: clean-tokenizer clean-indexer clean-parser
 
-test: test-tokenizer test-indexer
+test: test-tokenizer test-indexer test-parser
 
 # === Tokenizer (OCaml) ===
 
@@ -44,3 +44,18 @@ clean-indexer:
 test-indexer:
 	@echo "==> Testing indexer..."
 	cd indexer && $(MAKE) test
+
+
+# === Parser (OCaml) ===
+
+build-parser:
+	@echo "==> Building parser (OCaml)..."
+	cd parser && dune build
+
+clean-parser:
+	@echo "==> Cleaning parser..."
+	cd parser && dune clean
+
+test-parser:
+	@echo "==> Testing parser..."
+	cd parser && dune test
