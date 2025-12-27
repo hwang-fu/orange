@@ -1,3 +1,6 @@
+; Command-line tokenizer executable
+; Example Usage: echo "text" | ./main.exe
+
 (executable
  (name main)
- (libraries textproc))
+ (libraries textprocessing))

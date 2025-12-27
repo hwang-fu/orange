@@ -1,3 +1,8 @@
+; Text processing library
+; Provides: Lexer, Stopwords, Stemmer modules
+
 (library
- (name textproc)
- (wrapped false))
+ (name textprocessing)
+ (synopsis "Text processing pipeline")
+ (wrapped false)
+ (modules Lexer Stopwords Stemmer))
