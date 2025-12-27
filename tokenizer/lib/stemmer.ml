@@ -1,0 +1,357 @@
+(* stemmer.ml - Porter Stemmer implementation *)
+
+(* Check if a character is a vowel.
+   Note: 'y' is treated as a consonant at word start, vowel otherwise. *)
+let is_vowel word i =
+  let c = word.[i] in
+  match c with
+  | 'a' | 'e' | 'i' | 'o' | 'u' -> true
+  | 'y' -> i > 0 (* y is vowel only if not at start *)
+  | _ -> false
+;;
+
+(* Check if a character is a consonant *)
+let is_consonant word i = not (is_vowel word i)
+
+(* Check if word contains a vowel *)
+let has_vowel word =
+  let len = String.length word in
+  let rec loop i =
+    if i >= len then false else if is_vowel word i then true else loop (i + 1)
+  in
+  loop 0
+;;
+
+(* Check if word ends with given suffix *)
+let ends_with word suffix =
+  let wlen = String.length word in
+  let slen = String.length suffix in
+  if slen > wlen then false else String.sub word (wlen - slen) slen = suffix
+;;
+
+(* Remove n characters from end of word *)
+let chop word n =
+  let len = String.length word in
+  if n >= len then "" else String.sub word 0 (len - n)
+;;
+
+(* Check if word ends with double consonant (e.g., "hopp", "fall") *)
+let ends_double_consonant word =
+  let len = String.length word in
+  if len < 2
+  then false
+  else (
+    let c1 = word.[len - 1] in
+    let c2 = word.[len - 2] in
+    c1 = c2 && is_consonant word (len - 1))
+;;
+
+(* Check if word ends with CVC pattern where final C is not w, x, or y.
+   Used to determine if we should add 'e' after removing suffix. *)
+let ends_cvc word =
+  let len = String.length word in
+  if len < 3
+  then false
+  else (
+    let c_last = word.[len - 1] in
+    is_consonant word (len - 3)
+    && is_vowel word (len - 2)
+    && is_consonant word (len - 1)
+    && c_last <> 'w'
+    && c_last <> 'x'
+    && c_last <> 'y')
+;;
+
+(* Calculate the measure (m) of a word.
+   Measure = number of VC (vowel-consonant) sequences. *)
+let measure word =
+  let len = String.length word in
+  if len = 0
+  then 0
+  else (
+    let rec loop i in_vowel count =
+      if i >= len
+      then count
+      else (
+        let v = is_vowel word i in
+        if in_vowel && not v
+        then
+          (* transition from vowel to consonant = +1 *)
+          loop (i + 1) false (count + 1)
+        else loop (i + 1) v count)
+    in
+    (* skip initial consonants *)
+    let rec skip_initial_c i =
+      if i >= len then i else if is_vowel word i then i else skip_initial_c (i + 1)
+    in
+    let start = skip_initial_c 0 in
+    loop start false 0)
+;;
+
+(* Step 1a: Remove plural suffixes *)
+let step1a word =
+  if ends_with word "sses"
+  then chop word 2 (* sses -> ss *)
+  else if ends_with word "ies"
+  then chop word 2 (* ies -> i *)
+  else if ends_with word "ss"
+  then word (* ss -> ss (no change) *)
+  else if ends_with word "s"
+  then chop word 1 (* s -> (remove) *)
+  else word
+;;
+
+(* Step 1b: Remove -ed and -ing suffixes *)
+let rec step1b word =
+  if ends_with word "eed"
+  then (
+    let stem = chop word 1 in
+    if measure (chop word 3) > 0 then stem else word)
+  else if ends_with word "ed"
+  then (
+    let stem = chop word 2 in
+    if has_vowel stem then step1b_fix stem else word)
+  else if ends_with word "ing"
+  then (
+    let stem = chop word 3 in
+    if has_vowel stem then step1b_fix stem else word)
+  else word
+
+(* Fix stem after removing -ed/-ing *)
+and step1b_fix stem =
+  if ends_with stem "at"
+  then stem ^ "e"
+  else if ends_with stem "bl"
+  then stem ^ "e"
+  else if ends_with stem "iz"
+  then stem ^ "e"
+  else if ends_double_consonant stem
+  then (
+    let c = stem.[String.length stem - 1] in
+    if c <> 'l' && c <> 's' && c <> 'z' then chop stem 1 else stem)
+  else if measure stem = 1 && ends_cvc stem
+  then stem ^ "e"
+  else stem
+;;
+
+(* Step 1c: Handle -y suffix, and -fully compound suffix *)
+let step1c word =
+  (* Handle -fully before -y conversion *)
+  if ends_with word "fully"
+  then (
+    let stem = chop word 5 in
+    if measure stem > 0 then stem else word)
+  else if ends_with word "y"
+  then (
+    let stem = chop word 1 in
+    if has_vowel stem then stem ^ "i" else word)
+  else word
+;;
+
+(* Step 2: Map double suffixes to single ones (m > 0) *)
+let step2 word =
+  let try_replace suffix replacement =
+    if ends_with word suffix
+    then (
+      let stem = chop word (String.length suffix) in
+      if measure stem > 0 then Some (stem ^ replacement) else None)
+    else None
+  in
+  (* Try each rule in order; return first match or original word *)
+  match try_replace "ational" "ate" with
+  | Some w -> w
+  | None ->
+    (match try_replace "tional" "tion" with
+     | Some w -> w
+     | None ->
+       (match try_replace "enci" "ence" with
+        | Some w -> w
+        | None ->
+          (match try_replace "anci" "ance" with
+           | Some w -> w
+           | None ->
+             (match try_replace "izer" "ize" with
+              | Some w -> w
+              | None ->
+                (match try_replace "abli" "able" with
+                 | Some w -> w
+                 | None ->
+                   (match try_replace "alli" "al" with
+                    | Some w -> w
+                    | None ->
+                      (match try_replace "entli" "ent" with
+                       | Some w -> w
+                       | None ->
+                         (match try_replace "eli" "e" with
+                          | Some w -> w
+                          | None ->
+                            (match try_replace "ousli" "ous" with
+                             | Some w -> w
+                             | None ->
+                               (match try_replace "ization" "ize" with
+                                | Some w -> w
+                                | None ->
+                                  (match try_replace "ation" "ate" with
+                                   | Some w -> w
+                                   | None ->
+                                     (match try_replace "ator" "ate" with
+                                      | Some w -> w
+                                      | None ->
+                                        (match try_replace "alism" "al" with
+                                         | Some w -> w
+                                         | None ->
+                                           (match try_replace "iveness" "ive" with
+                                            | Some w -> w
+                                            | None ->
+                                              (match try_replace "fulness" "ful" with
+                                               | Some w -> w
+                                               | None ->
+                                                 (match try_replace "ousness" "ous" with
+                                                  | Some w -> w
+                                                  | None ->
+                                                    (match try_replace "aliti" "al" with
+                                                     | Some w -> w
+                                                     | None ->
+                                                       (match
+                                                          try_replace "iviti" "ive"
+                                                        with
+                                                        | Some w -> w
+                                                        | None ->
+                                                          (match
+                                                             try_replace "biliti" "ble"
+                                                           with
+                                                           | Some w -> w
+                                                           | None -> word)))))))))))))))))))
+;;
+
+(* Step 3: Map suffixes (m > 0) *)
+let step3 word =
+  let try_replace suffix replacement =
+    if ends_with word suffix
+    then (
+      let stem = chop word (String.length suffix) in
+      if measure stem > 0 then Some (stem ^ replacement) else None)
+    else None
+  in
+  match try_replace "icate" "ic" with
+  | Some w -> w
+  | None ->
+    (match try_replace "ative" "" with
+     | Some w -> w
+     | None ->
+       (match try_replace "alize" "al" with
+        | Some w -> w
+        | None ->
+          (match try_replace "iciti" "ic" with
+           | Some w -> w
+           | None ->
+             (match try_replace "ical" "ic" with
+              | Some w -> w
+              | None ->
+                (match try_replace "ful" "" with
+                 | Some w -> w
+                 | None ->
+                   (match try_replace "ness" "" with
+                    | Some w -> w
+                    | None -> word))))))
+;;
+
+(* Step 4: Remove suffixes (m > 1) *)
+let step4 word =
+  let try_remove suffix =
+    if ends_with word suffix
+    then (
+      let stem = chop word (String.length suffix) in
+      if measure stem > 1 then Some stem else None)
+    else None
+  in
+  (* Special case: -ion requires stem to end in 's' or 't' *)
+  let try_remove_ion () =
+    if ends_with word "ion"
+    then (
+      let stem = chop word 3 in
+      if measure stem > 1 && (ends_with stem "s" || ends_with stem "t")
+      then Some stem
+      else None)
+    else None
+  in
+  match try_remove "al" with
+  | Some w -> w
+  | None ->
+    (match try_remove "ance" with
+     | Some w -> w
+     | None ->
+       (match try_remove "ence" with
+        | Some w -> w
+        | None ->
+          (match try_remove "er" with
+           | Some w -> w
+           | None ->
+             (match try_remove "ic" with
+              | Some w -> w
+              | None ->
+                (match try_remove "able" with
+                 | Some w -> w
+                 | None ->
+                   (match try_remove "ible" with
+                    | Some w -> w
+                    | None ->
+                      (match try_remove "ant" with
+                       | Some w -> w
+                       | None ->
+                         (match try_remove "ement" with
+                          | Some w -> w
+                          | None ->
+                            (match try_remove "ment" with
+                             | Some w -> w
+                             | None ->
+                               (match try_remove "ent" with
+                                | Some w -> w
+                                | None ->
+                                  (match try_remove_ion () with
+                                   | Some w -> w
+                                   | None ->
+                                     (match try_remove "ou" with
+                                      | Some w -> w
+                                      | None ->
+                                        (match try_remove "ism" with
+                                         | Some w -> w
+                                         | None ->
+                                           (match try_remove "ate" with
+                                            | Some w -> w
+                                            | None ->
+                                              (match try_remove "iti" with
+                                               | Some w -> w
+                                               | None ->
+                                                 (match try_remove "ous" with
+                                                  | Some w -> w
+                                                  | None ->
+                                                    (match try_remove "ive" with
+                                                     | Some w -> w
+                                                     | None ->
+                                                       (match try_remove "ize" with
+                                                        | Some w -> w
+                                                        | None -> word))))))))))))))))))
+;;
+
+(* Step 5: Final cleanup *)
+let step5 word =
+  (* Step 5a: Remove trailing 'e' *)
+  let word =
+    if ends_with word "e"
+    then (
+      let stem = chop word 1 in
+      let m = measure stem in
+      if m > 1 then stem else if m = 1 && not (ends_cvc stem) then stem else word)
+    else word
+  in
+  (* Step 5b: Reduce 'll' to 'l' if m > 1 *)
+  if measure word > 1 && ends_with word "ll" then chop word 1 else word
+;;
+
+(* Main stemming function: apply all steps in sequence *)
+let stem word =
+  if String.length word <= 2
+  then word (* Don't stem very short words *)
+  else word |> step1a |> step1b |> step1c |> step2 |> step3 |> step4 |> step5
+;;
