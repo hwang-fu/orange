@@ -20,3 +20,7 @@ let tokenize text =
   |> split_words
   |> List.mapi (fun i word -> String.lowercase_ascii word, i)
 ;;
+
+let remove_stopwords tokens =
+  List.filter (fun (word, _pos) -> not (Stopwords.is_stopword word)) tokens
+;;
