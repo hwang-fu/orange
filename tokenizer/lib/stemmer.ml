@@ -1,3 +1,5 @@
+(* stemmer.ml - Porter Stemmer implementation *)
+
 (* Check if a character is a vowel.
    Note: 'y' is treated as a consonant at word start, vowel otherwise. *)
 let is_vowel word i =
@@ -247,4 +249,82 @@ let step3 word =
                    (match try_replace "ness" "" with
                     | Some w -> w
                     | None -> word))))))
+;;
+
+(* Step 4: Remove suffixes (m > 1) *)
+let step4 word =
+  let try_remove suffix =
+    if ends_with word suffix
+    then (
+      let stem = chop word (String.length suffix) in
+      if measure stem > 1 then Some stem else None)
+    else None
+  in
+  (* Special case: -ion requires stem to end in 's' or 't' *)
+  let try_remove_ion () =
+    if ends_with word "ion"
+    then (
+      let stem = chop word 3 in
+      if measure stem > 1 && (ends_with stem "s" || ends_with stem "t")
+      then Some stem
+      else None)
+    else None
+  in
+  match try_remove "al" with
+  | Some w -> w
+  | None ->
+    (match try_remove "ance" with
+     | Some w -> w
+     | None ->
+       (match try_remove "ence" with
+        | Some w -> w
+        | None ->
+          (match try_remove "er" with
+           | Some w -> w
+           | None ->
+             (match try_remove "ic" with
+              | Some w -> w
+              | None ->
+                (match try_remove "able" with
+                 | Some w -> w
+                 | None ->
+                   (match try_remove "ible" with
+                    | Some w -> w
+                    | None ->
+                      (match try_remove "ant" with
+                       | Some w -> w
+                       | None ->
+                         (match try_remove "ement" with
+                          | Some w -> w
+                          | None ->
+                            (match try_remove "ment" with
+                             | Some w -> w
+                             | None ->
+                               (match try_remove "ent" with
+                                | Some w -> w
+                                | None ->
+                                  (match try_remove_ion () with
+                                   | Some w -> w
+                                   | None ->
+                                     (match try_remove "ou" with
+                                      | Some w -> w
+                                      | None ->
+                                        (match try_remove "ism" with
+                                         | Some w -> w
+                                         | None ->
+                                           (match try_remove "ate" with
+                                            | Some w -> w
+                                            | None ->
+                                              (match try_remove "iti" with
+                                               | Some w -> w
+                                               | None ->
+                                                 (match try_remove "ous" with
+                                                  | Some w -> w
+                                                  | None ->
+                                                    (match try_remove "ive" with
+                                                     | Some w -> w
+                                                     | None ->
+                                                       (match try_remove "ize" with
+                                                        | Some w -> w
+                                                        | None -> word))))))))))))))))))
 ;;
