@@ -18,3 +18,12 @@ let advance lexer =
   lexer.pos <- lexer.pos + 1;
   c
 ;;
+
+(* Skip whitespace *)
+let rec skip_whitespace lexer =
+  match peek lexer with
+  | Some (' ' | '\t' | '\n' | '\r') ->
+    ignore (advance lexer);
+    skip_whitespace lexer
+  | _ -> ()
+;;
