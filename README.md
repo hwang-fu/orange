@@ -185,8 +185,8 @@ score := float64(posting.TermFreq) * idf
 
 ## Build Requirements
 
-- **Go** 1.21+
-- **OCaml** 4.14+ with Dune
+- **Go** 1.24+
+- **OCaml** 5.0+ with Dune
 - **Make**
 
 ```bash
