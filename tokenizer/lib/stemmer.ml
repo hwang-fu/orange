@@ -97,15 +97,32 @@ let step1a word =
   else if ends_with word "s"
   then chop word 1 (* s -> (remove) *)
   else word
+;;
 
-(* Fix stem after removing -ed/-ing: handle double consonant and add 'e' if needed *)
+(* Step 1b: Remove -ed and -ing suffixes *)
+let rec step1b word =
+  if ends_with word "eed"
+  then (
+    let stem = chop word 1 in
+    if measure (chop word 3) > 0 then stem else word)
+  else if ends_with word "ed"
+  then (
+    let stem = chop word 2 in
+    if has_vowel stem then step1b_fix stem else word)
+  else if ends_with word "ing"
+  then (
+    let stem = chop word 3 in
+    if has_vowel stem then step1b_fix stem else word)
+  else word
+
+(* Fix stem after removing -ed/-ing *)
 and step1b_fix stem =
   if ends_with stem "at"
-  then stem ^ "e" (* at -> ate *)
+  then stem ^ "e"
   else if ends_with stem "bl"
-  then stem ^ "e" (* bl -> ble *)
+  then stem ^ "e"
   else if ends_with stem "iz"
-  then stem ^ "e" (* iz -> ize *)
+  then stem ^ "e"
   else if ends_double_consonant stem
   then (
     let c = stem.[String.length stem - 1] in
@@ -113,4 +130,13 @@ and step1b_fix stem =
   else if measure stem = 1 && ends_cvc stem
   then stem ^ "e"
   else stem
+;;
+
+(* Step 1c: Replace suffix y with i if stem contains a vowel *)
+let step1c word =
+  if ends_with word "y"
+  then (
+    let stem = chop word 1 in
+    if has_vowel stem then stem ^ "i" else word)
+  else word
 ;;
