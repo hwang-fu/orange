@@ -27,3 +27,8 @@ let rec skip_whitespace lexer =
     skip_whitespace lexer
   | _ -> ()
 ;;
+
+(* Check if character is alphanumeric or underscore *)
+let is_word_char c =
+  (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c = '_'
+;;
