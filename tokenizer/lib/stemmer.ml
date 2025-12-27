@@ -11,8 +11,17 @@ let is_vowel word i =
 (* Check if a character is a consonant *)
 let is_consonant word i = not (is_vowel word i)
 
+(* Check if word contains a vowel *)
+let has_vowel word =
+  let len = String.length word in
+  let rec loop i =
+    if i >= len then false else if is_vowel word i then true else loop (i + 1)
+  in
+  loop 0
+;;
+
 (* Calculate the measure (m) of a word.
-     Measure = number of VC (vowel-consonant) sequences. *)
+   Measure = number of VC (vowel-consonant) sequences. *)
 let measure word =
   let len = String.length word in
   if len = 0
