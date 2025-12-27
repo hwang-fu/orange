@@ -1,6 +1,6 @@
 package main
 
-// main.go - CLI entry point for the pumpkin indexer.
+// main.go - CLI entry point for the orange indexer.
 // Supports two modes: index (build from stdin) and query (search).
 
 import (
@@ -9,8 +9,8 @@ import (
 	"os"
 	"strings"
 
-	"pumpkin/internal/index"
-	"pumpkin/pkg/json"
+	"orange/internal/index"
+	"orange/pkg/json"
 )
 
 func main() {
@@ -85,9 +85,9 @@ func runIndex() {
 	fmt.Fprintf(os.Stderr, "Indexed %d documents, %d unique terms\n", idx.DocCount(), idx.TermCount())
 
 	// Query terms from command line arguments
-	// Usage: pumpkin index <term1> <term2> ...
+	// Usage: orange index <term1> <term2> ...
 	if len(os.Args) < 3 {
-		fmt.Fprintln(os.Stderr, "usage: pumpkin index <query-term> [<query-term>...]")
+		fmt.Fprintln(os.Stderr, "usage: orange index <query-term> [<query-term>...]")
 		return
 	}
 
@@ -106,7 +106,7 @@ func runIndex() {
 
 // printUsage displays help information.
 func printUsage() {
-	fmt.Fprintln(os.Stderr, "usage: pumpkin <command> [args]")
+	fmt.Fprintln(os.Stderr, "usage: orange <command> [args]")
 	fmt.Fprintln(os.Stderr, "")
 	fmt.Fprintln(os.Stderr, "commands:")
 	fmt.Fprintln(os.Stderr, "  index <term>...   read tokens from stdin, build index, query for terms")

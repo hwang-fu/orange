@@ -1,13 +1,13 @@
 (lang dune 3.0)
 
-(name pumpkin-parser)
+(name orange-parser)
 
 (version 0.1.0)
 
 (authors "Junzhe Wang")
 
 (source
- (github hwang-fu/pumpkin))
+ (github hwang-fu/orange))
 
 (formatting
  (enabled_for ocaml))

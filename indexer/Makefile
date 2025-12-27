@@ -1,11 +1,11 @@
 .PHONY: all build check fmt clean test
 
-BINARY := pumpkin
+BINARY := orange
 
 all: check build
 
 build:
-	go build -o $(BINARY) ./cmd/pumpkin
+	go build -o $(BINARY) ./cmd/orange
 
 check:
 	go vet ./...

@@ -2,14 +2,14 @@
 
 ; Project metadata
 
-(name pumpkin-tokenizer)
+(name orange-tokenizer)
 
 (version 0.1.0)
 
 (authors "Junzhe Wang")
 
 (source
- (github hwang-fu/pumpkin))
+ (github hwang-fu/orange))
 
 ; Code formatting
 

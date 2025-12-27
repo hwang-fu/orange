@@ -1,4 +1,4 @@
-# Pumpkin - Top-level build orchestration
+# Orange - Top-level build orchestration
 # Builds all subprojects and coordinates testing
 
 .PHONY: all build clean test
