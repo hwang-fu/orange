@@ -27,6 +27,12 @@ let ends_with word suffix =
   if slen > wlen then false else String.sub word (wlen - slen) slen = suffix
 ;;
 
+(* Remove n characters from end of word *)
+let chop word n =
+  let len = String.length word in
+  if n >= len then "" else String.sub word 0 (len - n)
+;;
+
 (* Calculate the measure (m) of a word.
    Measure = number of VC (vowel-consonant) sequences. *)
 let measure word =
