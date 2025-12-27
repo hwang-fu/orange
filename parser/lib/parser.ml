@@ -100,3 +100,9 @@ and parse_or parser =
   in
   loop left
 ;;
+
+(* Main parse function *)
+let parse input =
+  let parser = create input in
+  parse_or parser
+;;
