@@ -1,3 +1,5 @@
+(* token.ml - Token types for query DSL *)
+
 type t =
   | AND (* AND keyword *)
   | OR (* OR keyword *)
