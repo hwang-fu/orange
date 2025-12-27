@@ -1,3 +1,5 @@
+(* ast.ml - Abstract Syntax Tree for query DSL *)
+
 type expr =
   | Term of string (* single word: search *)
   | Phrase of string list (* quoted phrase: "search engine" *)
