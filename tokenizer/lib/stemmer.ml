@@ -328,3 +328,19 @@ let step4 word =
                                                         | Some w -> w
                                                         | None -> word))))))))))))))))))
 ;;
+
+(* Step 5: Final cleanup *)
+let step5 word =
+  let len = String.length word in
+  (* Step 5a: Remove trailing 'e' *)
+  let word =
+    if ends_with word "e"
+    then (
+      let stem = chop word 1 in
+      let m = measure stem in
+      if m > 1 then stem else if m = 1 && not (ends_cvc stem) then stem else word)
+    else word
+  in
+  (* Step 5b: Reduce 'll' to 'l' if m > 1 *)
+  if measure word > 1 && ends_with word "ll" then chop word 1 else word
+;;
