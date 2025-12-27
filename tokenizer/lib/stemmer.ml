@@ -344,3 +344,10 @@ let step5 word =
   (* Step 5b: Reduce 'll' to 'l' if m > 1 *)
   if measure word > 1 && ends_with word "ll" then chop word 1 else word
 ;;
+
+(* Main stemming function: apply all steps in sequence *)
+let stem word =
+  if String.length word <= 2
+  then word (* Don't stem very short words *)
+  else word |> step1a |> step1b |> step1c |> step2 |> step3 |> step4 |> step5
+;;
