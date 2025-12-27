@@ -46,3 +46,7 @@ let words =
 (* Check if a word is a stopword.
    Returns true if the word should be filtered out. *)
 let is_stopword word = List.mem word words
+
+(* Filter out stopwords from a list of (token, position) pairs.
+   Positions are preserved from the original text. *)
+let filter tokens = List.filter (fun (word, _) -> not (is_stopword word)) tokens

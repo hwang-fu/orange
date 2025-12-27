@@ -20,12 +20,3 @@ let tokenize text =
   |> split_words
   |> List.mapi (fun i word -> String.lowercase_ascii word, i)
 ;;
-
-(* Filter out stopwords from a list of (token, position) pairs.
-   Positions are preserved from the original text. *)
-let remove_stopwords tokens =
-  List.filter (fun (word, _) -> not (Stopwords.is_stopword word)) tokens
-;;
-
-(* Apply stemming to each token *)
-let stem_tokens tokens = List.map (fun (word, pos) -> Stemmer.stem word, pos) tokens

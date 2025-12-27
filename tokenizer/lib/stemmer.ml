@@ -355,3 +355,6 @@ let stem word =
   then word (* Don't stem very short words *)
   else word |> step1a |> step1b |> step1c |> step2 |> step3 |> step4 |> step5
 ;;
+
+(* Apply stemming to each token *)
+let apply tokens = List.map (fun (word, pos) -> stem word, pos) tokens
