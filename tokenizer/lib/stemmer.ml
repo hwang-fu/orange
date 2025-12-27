@@ -33,6 +33,17 @@ let chop word n =
   if n >= len then "" else String.sub word 0 (len - n)
 ;;
 
+(* Check if word ends with double consonant (e.g., "hopp", "fall") *)
+let ends_double_consonant word =
+  let len = String.length word in
+  if len < 2
+  then false
+  else (
+    let c1 = word.[len - 1] in
+    let c2 = word.[len - 2] in
+    c1 = c2 && is_consonant word (len - 1))
+;;
+
 (* Calculate the measure (m) of a word.
    Measure = number of VC (vowel-consonant) sequences. *)
 let measure word =
