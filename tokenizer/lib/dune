@@ -1,2 +1,3 @@
 (library
- (name pumpkin_tokenizer))
+ (name textproc)
+ (wrapped false))
