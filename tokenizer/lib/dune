@@ -1,2 +1,8 @@
+; Text processing library
+; Provides: Tokenizer, Stopwords, Stemmer, Pipeline modules
+
 (library
- (name pumpkin_tokenizer))
+ (name textprocessing)
+ (synopsis "Text processing pipeline")
+ (wrapped false)
+ (modules Tokenizer Stopwords Stemmer Pipeline))

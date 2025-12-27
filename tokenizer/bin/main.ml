@@ -18,11 +18,6 @@ let tokens_to_json tokens =
 
 let () =
   let input = read_all () in
-  let tokens =
-    input
-    |> Pumpkin_tokenizer.Lexer.tokenize
-    |> Pumpkin_tokenizer.Lexer.remove_stopwords
-    |> Pumpkin_tokenizer.Lexer.stem_tokens
-  in
+  let tokens = Pipeline.process input in
   print_endline (tokens_to_json tokens)
 ;;

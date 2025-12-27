@@ -1,6 +1,17 @@
 (lang dune 3.0)
 
-(name pumpkin_tokenizer)
+; Project metadata
+
+(name pumpkin-tokenizer)
+
+(version 0.1.0)
+
+(authors "Junzhe Wang")
+
+(source
+ (github hwang-fu/pumpkin))
+
+; Code formatting
 
 (formatting
  (enabled_for ocaml))
