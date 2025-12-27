@@ -44,6 +44,22 @@ let ends_double_consonant word =
     c1 = c2 && is_consonant word (len - 1))
 ;;
 
+(* Check if word ends with CVC pattern where final C is not w, x, or y.
+     Used to determine if we should add 'e' after removing suffix. *)
+let ends_cvc word =
+  let len = String.length word in
+  if len < 3
+  then false
+  else (
+    let c_last = word.[len - 1] in
+    is_consonant word (len - 3)
+    && is_vowel word (len - 2)
+    && is_consonant word (len - 1)
+    && c_last <> 'w'
+    && c_last <> 'x'
+    && c_last <> 'y')
+;;
+
 (* Calculate the measure (m) of a word.
    Measure = number of VC (vowel-consonant) sequences. *)
 let measure word =
