@@ -1,0 +1,6 @@
+; Query parser CLI
+; Example Usage: echo "search AND engine" | ./main.exe
+
+(executable
+ (name main)
+ (libraries queryparser))
