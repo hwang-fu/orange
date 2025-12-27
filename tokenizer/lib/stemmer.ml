@@ -216,3 +216,35 @@ let step2 word =
                                                            | Some w -> w
                                                            | None -> word)))))))))))))))))))
 ;;
+
+(* Step 3: Map suffixes (m > 0) *)
+let step3 word =
+  let try_replace suffix replacement =
+    if ends_with word suffix
+    then (
+      let stem = chop word (String.length suffix) in
+      if measure stem > 0 then Some (stem ^ replacement) else None)
+    else None
+  in
+  match try_replace "icate" "ic" with
+  | Some w -> w
+  | None ->
+    (match try_replace "ative" "" with
+     | Some w -> w
+     | None ->
+       (match try_replace "alize" "al" with
+        | Some w -> w
+        | None ->
+          (match try_replace "iciti" "ic" with
+           | Some w -> w
+           | None ->
+             (match try_replace "ical" "ic" with
+              | Some w -> w
+              | None ->
+                (match try_replace "ful" "" with
+                 | Some w -> w
+                 | None ->
+                   (match try_replace "ness" "" with
+                    | Some w -> w
+                    | None -> word))))))
+;;
