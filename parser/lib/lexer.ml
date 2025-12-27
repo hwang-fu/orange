@@ -46,3 +46,34 @@ let read_word lexer =
   loop ();
   Buffer.contents buf
 ;;
+
+(* Get next token *)
+let next_token lexer =
+  skip_whitespace lexer;
+  if is_at_end lexer
+  then Token.EOF
+  else (
+    match peek lexer with
+    | Some '(' ->
+      ignore (advance lexer);
+      Token.LPAREN
+    | Some ')' ->
+      ignore (advance lexer);
+      Token.RPAREN
+    | Some '"' ->
+      ignore (advance lexer);
+      Token.QUOTE
+    | Some c when is_word_char c ->
+      let word = read_word lexer in
+      (* Check for keywords *)
+      (match String.uppercase_ascii word with
+       | "AND" -> Token.AND
+       | "OR" -> Token.OR
+       | "NOT" -> Token.NOT
+       | _ -> Token.WORD (String.lowercase_ascii word))
+    | Some c ->
+      (* Skip unknown character *)
+      ignore (advance lexer);
+      next_token lexer
+    | None -> Token.EOF)
+;;
