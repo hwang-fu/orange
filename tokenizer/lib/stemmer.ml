@@ -20,6 +20,13 @@ let has_vowel word =
   loop 0
 ;;
 
+(* Check if word ends with given suffix *)
+let ends_with word suffix =
+  let wlen = String.length word in
+  let slen = String.length suffix in
+  if slen > wlen then false else String.sub word (wlen - slen) slen = suffix
+;;
+
 (* Calculate the measure (m) of a word.
    Measure = number of VC (vowel-consonant) sequences. *)
 let measure word =
