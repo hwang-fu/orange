@@ -19,10 +19,7 @@ let tokens_to_json tokens =
 let () =
   let input = read_all () in
   let tokens =
-    input
-    |> Pumpkin_tokenizer.Lexer.tokenize
-    |> Pumpkin_tokenizer.Lexer.remove_stopwords
-    |> Pumpkin_tokenizer.Lexer.stem_tokens
+    input |> Tokenizer.tokenize |> Tokenizer.remove_stopwords |> Tokenizer.stem_tokens
   in
   print_endline (tokens_to_json tokens)
 ;;
