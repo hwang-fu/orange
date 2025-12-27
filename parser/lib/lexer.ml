@@ -32,3 +32,17 @@ let rec skip_whitespace lexer =
 let is_word_char c =
   (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c = '_'
 ;;
+
+(* Read a word (sequence of word characters) *)
+let read_word lexer =
+  let buf = Buffer.create 16 in
+  let rec loop () =
+    match peek lexer with
+    | Some c when is_word_char c ->
+      Buffer.add_char buf (advance lexer);
+      loop ()
+    | _ -> ()
+  in
+  loop ();
+  Buffer.contents buf
+;;
