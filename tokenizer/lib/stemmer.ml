@@ -140,3 +140,79 @@ let step1c word =
     if has_vowel stem then stem ^ "i" else word)
   else word
 ;;
+
+(* Step 2: Map double suffixes to single ones (m > 0) *)
+let step2 word =
+  let try_replace suffix replacement =
+    if ends_with word suffix
+    then (
+      let stem = chop word (String.length suffix) in
+      if measure stem > 0 then Some (stem ^ replacement) else None)
+    else None
+  in
+  (* Try each rule in order; return first match or original word *)
+  match try_replace "ational" "ate" with
+  | Some w -> w
+  | None ->
+    (match try_replace "tional" "tion" with
+     | Some w -> w
+     | None ->
+       (match try_replace "enci" "ence" with
+        | Some w -> w
+        | None ->
+          (match try_replace "anci" "ance" with
+           | Some w -> w
+           | None ->
+             (match try_replace "izer" "ize" with
+              | Some w -> w
+              | None ->
+                (match try_replace "abli" "able" with
+                 | Some w -> w
+                 | None ->
+                   (match try_replace "alli" "al" with
+                    | Some w -> w
+                    | None ->
+                      (match try_replace "entli" "ent" with
+                       | Some w -> w
+                       | None ->
+                         (match try_replace "eli" "e" with
+                          | Some w -> w
+                          | None ->
+                            (match try_replace "ousli" "ous" with
+                             | Some w -> w
+                             | None ->
+                               (match try_replace "ization" "ize" with
+                                | Some w -> w
+                                | None ->
+                                  (match try_replace "ation" "ate" with
+                                   | Some w -> w
+                                   | None ->
+                                     (match try_replace "ator" "ate" with
+                                      | Some w -> w
+                                      | None ->
+                                        (match try_replace "alism" "al" with
+                                         | Some w -> w
+                                         | None ->
+                                           (match try_replace "iveness" "ive" with
+                                            | Some w -> w
+                                            | None ->
+                                              (match try_replace "fulness" "ful" with
+                                               | Some w -> w
+                                               | None ->
+                                                 (match try_replace "ousness" "ous" with
+                                                  | Some w -> w
+                                                  | None ->
+                                                    (match try_replace "aliti" "al" with
+                                                     | Some w -> w
+                                                     | None ->
+                                                       (match
+                                                          try_replace "iviti" "ive"
+                                                        with
+                                                        | Some w -> w
+                                                        | None ->
+                                                          (match
+                                                             try_replace "biliti" "ble"
+                                                           with
+                                                           | Some w -> w
+                                                           | None -> word)))))))))))))))))))
+;;
