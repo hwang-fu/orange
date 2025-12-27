@@ -118,8 +118,8 @@ let measure word =
 ;;
 
 (* ============================================================
-     Step 1: Plurals, Past Tense, -y
-     ============================================================ *)
+   Step 1: Plurals, Past Tense, -y
+   ============================================================ *)
 
 (* Step 1a: Remove plural suffixes (-s, -es). *)
 let step1a word =
@@ -135,7 +135,7 @@ let step1a word =
 ;;
 
 (* Step 1b helper: Fix stem after removing -ed/-ing.
-     Handles special cases like "hopping" -> "hop" + restore "e". *)
+   Handles special cases like "hopping" -> "hop" + restore "e". *)
 let rec step1b_fix stem =
   if ends_with stem "at"
   then stem ^ "e"
@@ -183,8 +183,8 @@ let step1c word =
 ;;
 
 (* ============================================================
-     Steps 2-4: Suffix Mapping and Removal
-     ============================================================ *)
+   Steps 2-4: Suffix Mapping and Removal
+   ============================================================ *)
 
 (* Helper: Try to replace [suffix] with [replacement] if measure > 0. *)
 let try_replace_m0 word suffix replacement =
@@ -304,8 +304,8 @@ let step4 word =
 ;;
 
 (* ============================================================
-     Step 5: Final Cleanup
-     ============================================================ *)
+   Step 5: Final Cleanup
+   ============================================================ *)
 
 (* Step 5: Remove trailing -e and reduce -ll to -l. *)
 let step5 word =
@@ -323,11 +323,11 @@ let step5 word =
 ;;
 
 (* ============================================================
-     Public API
-     ============================================================ *)
+   Public API
+   ============================================================ *)
 
 (* Stem a word using the Porter algorithm.
-     Words with 2 or fewer characters are returned unchanged. *)
+   Words with 2 or fewer characters are returned unchanged. *)
 let stem word =
   if String.length word <= 2
   then word
