@@ -18,8 +18,6 @@ let tokens_to_json tokens =
 
 let () =
   let input = read_all () in
-  let tokens =
-    input |> Tokenizer.tokenize |> Tokenizer.remove_stopwords |> Tokenizer.stem_tokens
-  in
+  let tokens = Pipeline.process input in
   print_endline (tokens_to_json tokens)
 ;;
