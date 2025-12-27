@@ -7,3 +7,6 @@ let is_vowel word i =
   | 'y' -> i > 0 (* y is vowel only if not at start *)
   | _ -> false
 ;;
+
+(* Check if a character is a consonant *)
+let is_consonant word i = not (is_vowel word i)
