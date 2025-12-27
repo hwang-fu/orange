@@ -27,5 +27,5 @@ let remove_stopwords tokens =
   List.filter (fun (word, _) -> not (Stopwords.is_stopword word)) tokens
 ;;
 
-(* Applying stemming to each token *)
+(* Apply stemming to each token *)
 let stem_tokens tokens = List.map (fun (word, pos) -> Stemmer.stem word, pos) tokens

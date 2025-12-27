@@ -134,9 +134,14 @@ and step1b_fix stem =
   else stem
 ;;
 
-(* Step 1c: Replace suffix y with i if stem contains a vowel *)
+(* Step 1c: Handle -y suffix, and -fully compound suffix *)
 let step1c word =
-  if ends_with word "y"
+  (* Handle -fully before -y conversion *)
+  if ends_with word "fully"
+  then (
+    let stem = chop word 5 in
+    if measure stem > 0 then stem else word)
+  else if ends_with word "y"
   then (
     let stem = chop word 1 in
     if has_vowel stem then stem ^ "i" else word)
@@ -331,7 +336,6 @@ let step4 word =
 
 (* Step 5: Final cleanup *)
 let step5 word =
-  let len = String.length word in
   (* Step 5a: Remove trailing 'e' *)
   let word =
     if ends_with word "e"
