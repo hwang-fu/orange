@@ -2,9 +2,9 @@
 # Builds all subprojects and coordinates testing
 
 .PHONY: all build clean test
-.PHONY: build-tokenizer build-indexer
-.PHONY: clean-tokenizer clean-indexer
-.PHONY: test-tokenizer test-indexer
+.PHONY: build-tokenizer build-indexer build-parser
+.PHONY: clean-tokenizer clean-indexer clean-parser
+.PHONY: test-tokenizer test-indexer test-parser
 
 # === Main Targets ===
 
