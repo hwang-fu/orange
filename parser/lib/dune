@@ -1,0 +1,8 @@
+; Query parser library
+; Provides: Token, Lexer, Ast, Parser modules
+
+(library
+ (name queryparser)
+ (synopsis "Query DSL parser")
+ (wrapped false)
+ (modules Token Lexer Ast Parser))
