@@ -2,20 +2,20 @@
 # Builds all subprojects and coordinates testing
 
 .PHONY: all build clean test
-.PHONY: build-tokenizer build-indexer build-parser
-.PHONY: clean-tokenizer clean-indexer clean-parser
-.PHONY: test-tokenizer test-indexer test-parser
+.PHONY: build-tokenizer build-indexer build-parser build-optimizer
+.PHONY: clean-tokenizer clean-indexer clean-parser clean-optimizer
+.PHONY: test-tokenizer test-indexer test-parser test-optimizer
 
 # === Main Targets ===
 
 # Build all subprojects
 all: build
 
-build: build-tokenizer build-indexer build-parser
+build: build-tokenizer build-indexer build-parser build-optimizer
 
-clean: clean-tokenizer clean-indexer clean-parser
+clean: clean-tokenizer clean-indexer clean-parser clean-optimizer
 
-test: test-tokenizer test-indexer test-parser
+test: test-tokenizer test-indexer test-parser test-optimizer
 
 # === Tokenizer (OCaml) ===
 
@@ -59,3 +59,17 @@ clean-parser:
 test-parser:
 	@echo "==> Testing parser..."
 	cd parser && dune test
+
+# === Optimizer (Haskell) ===
+
+build-optimizer:
+	@echo "==> Building optimizer (Haskell)..."
+	cd optimizer && cabal build
+
+clean-optimizer:
+	@echo "==> Cleaning optimizer..."
+	cd optimizer && cabal clean
+
+test-optimizer:
+	@echo "==> Testing optimizer..."
+	cd optimizer && cabal test
