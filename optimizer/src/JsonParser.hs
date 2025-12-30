@@ -24,3 +24,10 @@ expectKey key tokens =
           | k == key -> Right (v, rest)
           | otherwise -> Left $ "Expected key '" ++ key ++ "', got '" ++ k ++ "'"
         _ -> Left $ "Expected key '" ++ key ++ "'"
+
+-- | Parse Term: expect "value": "..."
+parseTerm :: [Token] -> Either ParseError (Expr, [Token])
+parseTerm tokens = do
+  (val, rest) <- expectKey "value" tokens
+  rest' <- expectRBrace rest
+  Right (Term val, rest')
