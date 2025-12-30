@@ -25,6 +25,16 @@ expectKey key tokens =
           | otherwise -> Left $ "Expected key '" ++ key ++ "', got '" ++ k ++ "'"
         _ -> Left $ "Expected key '" ++ key ++ "'"
 
+-- | Expect comma (optional), then "key": <object>
+expectKeyExpr :: String -> [Token] -> Either ParseError (Expr, [Token])
+expectKeyExpr key tokens =
+  let tokens' = skipComma tokens
+   in case tokens' of
+        (TokString k : TokColon : rest)
+          | k == key -> parseObject rest
+          | otherwise -> Left $ "Expected key '" ++ key ++ "', got '" ++ k ++ "'"
+        _ -> Left $ "Expected key '" ++ key ++ "'"
+
 -- | Parse Term: expect "value": "..."
 parseTerm :: [Token] -> Either ParseError (Expr, [Token])
 parseTerm tokens = do
