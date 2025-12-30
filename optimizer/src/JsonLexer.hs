@@ -1,3 +1,10 @@
+-- Tokenizes JSON input for the parser
+module JsonLexer
+  ( Token (..),
+    lexJson,
+  )
+where
+
 -- \| JSON tokens
 data Token
   = -- | {
