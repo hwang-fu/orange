@@ -78,3 +78,12 @@ parseObject (TokLBrace : rest) = do
     "not" -> parseNot rest1
     other -> Left $ "Unknown type: " ++ other
 parseObject _ = Left "Expected '{'"
+
+-- | Parse JSON string into Expr
+parseExpr :: String -> Either ParseError Expr
+parseExpr input =
+  case lexJson input of
+    [] -> Left "Empty input"
+    tokens -> case parseObject tokens of
+      Left err -> Left err
+      Right (expr, _) -> Right expr
