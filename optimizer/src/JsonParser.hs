@@ -63,3 +63,18 @@ parseNot tokens = do
   (inner, rest) <- expectKeyExpr "expr" tokens
   rest' <- expectRBrace rest
   Right (Not inner, rest')
+
+-- | Parse a JSON object into Expr, return remaining tokens
+parseObject :: [Token] -> Either ParseError (Expr, [Token])
+parseObject (TokLBrace : rest) = do
+  -- Parse "type": "..."
+  (typ, rest1) <- expectKey "type" rest
+  -- Dispatch based on type
+  case typ of
+    "term" -> parseTerm rest1
+    "phrase" -> parsePhrase rest1
+    "and" -> parseBinary And rest1
+    "or" -> parseBinary Or rest1
+    "not" -> parseNot rest1
+    other -> Left $ "Unknown type: " ++ other
+parseObject _ = Left "Expected '{'"
