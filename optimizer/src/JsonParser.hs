@@ -48,3 +48,11 @@ parsePhrase tokens = do
   (val, rest) <- expectKey "value" tokens
   rest' <- expectRBrace rest
   Right (Phrase (words val), rest')
+
+-- | Parse And/Or: expect "left": {...}, "right": {...}
+parseBinary :: (Expr -> Expr -> Expr) -> [Token] -> Either ParseError (Expr, [Token])
+parseBinary constructor tokens = do
+  (leftExpr, rest1) <- expectKeyExpr "left" tokens
+  (rightExpr, rest2) <- expectKeyExpr "right" rest1
+  rest3 <- expectRBrace rest2
+  Right (constructor leftExpr rightExpr, rest3)
