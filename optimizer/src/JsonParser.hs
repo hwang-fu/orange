@@ -56,3 +56,10 @@ parseBinary constructor tokens = do
   (rightExpr, rest2) <- expectKeyExpr "right" rest1
   rest3 <- expectRBrace rest2
   Right (constructor leftExpr rightExpr, rest3)
+
+-- | Parse Not: expect "expr": {...}
+parseNot :: [Token] -> Either ParseError (Expr, [Token])
+parseNot tokens = do
+  (inner, rest) <- expectKeyExpr "expr" tokens
+  rest' <- expectRBrace rest
+  Right (Not inner, rest')
