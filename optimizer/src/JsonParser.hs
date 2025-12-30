@@ -31,3 +31,10 @@ parseTerm tokens = do
   (val, rest) <- expectKey "value" tokens
   rest' <- expectRBrace rest
   Right (Term val, rest')
+
+-- | Parse Phrase: expect "value": "word1 word2 ..."
+parsePhrase :: [Token] -> Either ParseError (Expr, [Token])
+parsePhrase tokens = do
+  (val, rest) <- expectKey "value" tokens
+  rest' <- expectRBrace rest
+  Right (Phrase (words val), rest')
