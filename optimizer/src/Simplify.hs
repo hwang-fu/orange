@@ -1,3 +1,10 @@
+-- | Boolean simplification rules for query AST
+-- Applies rewrite rules to optimize queries
+module Simplify
+  ( simplify,
+  )
+where
+
 import Ast (Expr (..))
 
 -- | Apply simplification rules recursively
