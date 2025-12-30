@@ -19,6 +19,8 @@ library
   exposed-modules:
     Lib
     Ast
+    JsonLexer
+    JsonParser
   hs-source-dirs:   src
   build-depends:
     , base >=4.14 && <5
