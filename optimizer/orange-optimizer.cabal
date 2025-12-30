@@ -19,6 +19,7 @@ library
   exposed-modules:
     Lib
     Ast
+    Emit
     JsonLexer
     JsonParser
     Simplify

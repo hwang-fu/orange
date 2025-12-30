@@ -1,3 +1,10 @@
+-- \| JSON emitter for AST
+-- Converts Haskell Expr back to JSON for the indexer
+module Emit
+  ( toJson,
+  )
+where
+
 import Ast (Expr (..))
 
 -- | Convert Expr to JSON string
