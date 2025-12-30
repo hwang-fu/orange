@@ -1,3 +1,10 @@
+-- Parses JSON from OCaml's query parser into Haskell Expr
+module JsonParser
+  ( parseExpr,
+    ParseError,
+  )
+where
+
 import Ast (Expr (..))
 import JsonLexer (Token (..), lexJson)
 
